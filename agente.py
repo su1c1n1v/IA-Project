@@ -6,11 +6,10 @@ e quaisquer outras que achem necessário criar
 
 colocar aqui os nomes e número de aluno:
 40681, Vinicius Rodrigues Silva Costa
-NUM2, NOME2
+NUM2, Miguel
 
 """
 import time
-print('Miguel\nTime: ',time.time())
 list = []
 def work(posicao, bateria, objetos):
     resp1(objetos)
@@ -19,7 +18,7 @@ def work(posicao, bateria, objetos):
 def resp1(objetos):
     if objetos !=[] and objetos not in list:
         list.append(objetos)
-        print('ola',list)
+        print('Medico',list)
 	
 def resp2():
     pass
