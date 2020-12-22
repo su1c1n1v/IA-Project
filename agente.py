@@ -10,15 +10,14 @@ NUM2, Miguel
 
 """
 import time
-list = []
+import main
 def work(posicao, bateria, objetos):
-    resp1(objetos)
-
+ if objetos != []:
+  main.get_objects(objetos)
+    
 		
-def resp1(objetos):
-    if objetos !=[] and objetos not in list:
-        list.append(objetos)
-        print('Medico',list)
+def resp1():
+	pass
 	
 def resp2():
     pass
