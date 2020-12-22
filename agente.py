@@ -10,7 +10,7 @@ NUM2, NOME2
 
 """
 import time
-print('Vincius\nTime: ',time.time())
+print('Miguel\nTime: ',time.time())
 list = []
 def work(posicao, bateria, objetos):
     resp1(objetos)
