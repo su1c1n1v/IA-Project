@@ -15,15 +15,15 @@ import pygame
 def work(posicao, bateria, objetos):
 	if objetos != []:
 		main.get_objects(objetos)
-		print('Posicao: ',main.actuallyLocation(posicao))
-	
+	main.actuallyLocation(posicao)
 
   	
 def resp1():
 	pass
 	
 def resp2():
-	print("Posicao: ",main.getPosition())
+	main.getActuallyPosition()
+	
 
 def resp3():
 	pass
