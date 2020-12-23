@@ -15,7 +15,7 @@ import graph
 
 def work(posicao, bateria, objetos):
 	main.actuallyLocation(posicao)
-	graph.searchRoomInGraph(main.getActuallyPosition(),posicao)
+	main.refresh_graph(posicao)
 	if objetos != []:
 		main.get_objects(objetos)
   	

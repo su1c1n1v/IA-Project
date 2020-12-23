@@ -1,6 +1,6 @@
 import time
 import networkx as net
-import graph 
+import graph  as gph
 
 enfermeiro_list = []
 medico_list = []
@@ -10,10 +10,13 @@ cama_list = []
 cadeira_list = []
 mesa_list = []
 
+# Init Variables ------------------------------------------------------ #
 position = ['Corredor 2']
 local_point = [[100,100]]
-
-graph.init_graph()
+graph = net.Graph()
+gph.init_graph(graph)
+speed = 245.6
+# --------------------------------------------------------------------- #
 
 def get_objects(obj):
 	cathegory = obj[0].split("_")[0]
@@ -50,7 +53,7 @@ def show_dictionary(list_dictionary):
 	for x in list_dictionary:
 		print(x['name'],' ',x['cathegory'])
 
-# Location -------------------------------------------- #
+# Location ------------------------------------------------------------ #
 def actuallyLocation(pos):
 	local_point.clear()
 	local_point.append(pos)
@@ -60,7 +63,7 @@ def actuallyLocation(pos):
 	if(x >= 30 and x <= 85 and y >= 90 and y <= 305):
 		position = 'Corredor 2'
 		getPosition(position)
-	if(x >= 30 and x <= 180 and y >= 30 and y <= 90):
+	elif(x >= 30 and x <= 180 and y >= 30 and y <= 90):
 		position = 'Escadas'
 		getPosition(position)
 	elif(x >= 565 and x <= 635 and y >= 30 and y <= 305):
@@ -102,7 +105,7 @@ def actuallyLocation(pos):
 	elif(x >= 615 and x <= 770 and y >= 455 and y <= 570):
 		position = "Sala 14"
 		getPosition(position)
-		
+# --------------------------------------------------------------------- #		
 def getPosition(pos):
 	if(pos not in position):
 		position.append(pos)
@@ -114,6 +117,14 @@ def getActuallyPosition():
 
 
 def call_shortest_path():
-	graph.shortest_path(position,local_point)
-
-# ------------------------------------------------------ #		
+	path = gph.shortest_path(position,local_point,'Escadas',graph)
+	distance = 0
+	for pos in range(len(path)):
+		if(pos+2 < len(path)):
+			distance = distance + graph[path[pos+1]][path[pos+2]]['weight']
+			print(path[pos+1],path[pos+2],graph[path[pos+1]][path[pos+2]]['weight'])
+	print('Distance:',distance)
+# Add Room or Object in the graph ------------------------------------- #
+def refresh_graph(posicao):
+	gph.searchRoomInGraph(getActuallyPosition(),posicao,graph)
+# --------------------------------------------------------------------- #
