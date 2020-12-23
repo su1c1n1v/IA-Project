@@ -11,6 +11,7 @@ cadeira_list = []
 mesa_list = []
 
 position = ['Corredor 2']
+local_point = [[100,100]]
 
 graph.init_graph()
 
@@ -51,7 +52,8 @@ def show_dictionary(list_dictionary):
 
 # Location -------------------------------------------- #
 def actuallyLocation(pos):
-	
+	local_point.clear()
+	local_point.append(pos)
 	x = pos[0]
 	y = pos[1]
 	
@@ -110,5 +112,8 @@ def getPosition(pos):
 def getActuallyPosition():
 	return position
 
+
+def call_shortest_path():
+	graph.shortest_path(position,local_point)
 
 # ------------------------------------------------------ #		
