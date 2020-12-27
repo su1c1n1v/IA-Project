@@ -11,16 +11,19 @@ NUM2, Miguel
 """
 import time
 import main
+import pygame
 def work(posicao, bateria, objetos):
- if objetos != []:
-  main.get_objects(objetos)
-    
-		
+	if objetos != []:
+		main.get_objects(objetos)
+	main.actuallyLocation(posicao)
+
+  	
 def resp1():
 	pass
 	
 def resp2():
-    pass
+	main.getActuallyPosition()
+	
 
 def resp3():
 	pass
