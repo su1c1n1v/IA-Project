@@ -11,7 +11,7 @@ NUM2, Miguel
 """
 import time
 import main
-import pygame
+
 def work(posicao, bateria, objetos):
 	if objetos != []:
 		main.get_objects(objetos)

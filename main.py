@@ -1,4 +1,6 @@
 import time
+import networkx as net
+import graph 
 
 enfermeiro_list = []
 medico_list = []
@@ -7,7 +9,10 @@ livro_list = []
 cama_list = []
 cadeira_list = []
 mesa_list = []
+
 position = []
+
+graph.initGraph()
 
 def get_objects(obj):
 	cathegory = obj[0].split("_")[0]
@@ -53,10 +58,13 @@ def actuallyLocation(pos):
 	if(x >= 30 and x <= 85 and y >= 90 and y <= 305):
 		position = 'Corredor 2'
 		getPosition(position)
+	if(x >= 30 and x <= 180 and y >= 30 and y <= 90):
+		position = 'Escadas'
+		getPosition(position)
 	elif(x >= 565 and x <= 635 and y >= 30 and y <= 305):
 		position = "Corredor 3"
 		getPosition(position)
-	elif(False):
+	elif(x >= 180 and x <= 540 and y >= 30 and y <= 70 or x >= 110 and x <= 540 and y >= 90 and y <= 135):
 		position = "Corredor 1"
 		getPosition(position)
 	elif(x >= 30 and x <= 770 and y >= 330 and y <= 410):
@@ -103,4 +111,7 @@ def getPosition(pos):
 	
 def getActuallyPosition():
 	print('posicao ',position)
+
+
+	
 # ------------------------------------------------------ #		
