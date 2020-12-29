@@ -27,7 +27,7 @@ def resp2():
 	
 
 def resp3():
-	pass
+	main.call_shortest_path()
 	
 def resp4():
     pass
