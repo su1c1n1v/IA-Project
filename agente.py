@@ -11,15 +11,16 @@ NUM2, Miguel
 """
 import time
 import main
+import graph
 
 def work(posicao, bateria, objetos):
+	main.actuallyLocation(posicao)
+	graph.searchRoomInGraph(main.getActuallyPosition(),posicao)
 	if objetos != []:
 		main.get_objects(objetos)
-	main.actuallyLocation(posicao)
-
   	
 def resp1():
-	pass
+	graph.showEdges()
 	
 def resp2():
 	main.getActuallyPosition()

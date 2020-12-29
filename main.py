@@ -10,9 +10,9 @@ cama_list = []
 cadeira_list = []
 mesa_list = []
 
-position = []
+position = ['Corredor 2']
 
-graph.initGraph()
+graph.init_graph()
 
 def get_objects(obj):
 	cathegory = obj[0].split("_")[0]
@@ -102,16 +102,13 @@ def actuallyLocation(pos):
 		getPosition(position)
 		
 def getPosition(pos):
-	if(position != []):
-		position.clear()
+	if(pos not in position):
 		position.append(pos)
 		
-	else:
-		position.append(pos)
+
 	
 def getActuallyPosition():
-	print('posicao ',position)
+	return position
 
 
-	
 # ------------------------------------------------------ #		
