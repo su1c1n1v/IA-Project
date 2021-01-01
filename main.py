@@ -13,8 +13,9 @@ mesa_list = []
 # Init Variables ------------------------------------------------------ #
 position = ['Corredor 2']
 local_point = [[100,100]]
-graph = net.Graph()
-gph.init_graph(graph)
+#graph = net.Graph()
+graph = net.MultiGraph()
+#gph.init_graph(graph)
 speed = 245.6
 # --------------------------------------------------------------------- #
 
@@ -49,9 +50,11 @@ def create_dictionary(obj):
 	return dc_objets
 		
 def show_dictionary(list_dictionary):
+	"""
 	print('------------------------------')
 	for x in list_dictionary:
 		print(x['name'],' ',x['cathegory'])
+		"""
 
 # Location ------------------------------------------------------------ #
 def actuallyLocation(pos):
@@ -107,7 +110,7 @@ def actuallyLocation(pos):
 		getPosition(position)
 # --------------------------------------------------------------------- #		
 def getPosition(pos):
-	if(pos not in position):
+	if(pos != position[-1]):
 		position.append(pos)
 		
 
@@ -115,16 +118,11 @@ def getPosition(pos):
 def getActuallyPosition():
 	return position
 
-
 def call_shortest_path():
-	path = gph.shortest_path(position,local_point,'Escadas',graph)
-	distance = 0
-	for pos in range(len(path)):
-		if(pos+2 < len(path)):
-			distance = distance + graph[path[pos+1]][path[pos+2]]['weight']
-			print(path[pos+1],path[pos+2],graph[path[pos+1]][path[pos+2]]['weight'])
-	print('Distance:',distance)
+	path = gph.create_graph_distance_two_nodes(position,local_point,'Escadas',graph)
 # Add Room or Object in the graph ------------------------------------- #
 def refresh_graph(posicao):
 	gph.searchRoomInGraph(getActuallyPosition(),posicao,graph)
 # --------------------------------------------------------------------- #
+def show_edges():
+	gph.show_edges(graph)

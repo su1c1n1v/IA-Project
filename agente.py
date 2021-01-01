@@ -20,20 +20,21 @@ def work(posicao, bateria, objetos):
 		main.get_objects(objetos)
   	
 def resp1():
-	graph.showEdges()
+	main.show_edges()
 	
 def resp2():
-	main.getActuallyPosition()
+	print(main.getActuallyPosition())
 	
 
 def resp3():
-	main.call_shortest_path()
+	pass
 	
 def resp4():
     pass
 
 def resp5():
-    pass
+	# How much time is it to reach in 'escadas'
+    main.call_shortest_path()
 
 def resp6():
     pass
