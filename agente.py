@@ -17,24 +17,25 @@ def work(posicao, bateria, objetos):
 	main.actuallyLocation(posicao)
 	main.refresh_graph(posicao)
 	if objetos != []:
-		main.get_objects(objetos)
+		main.get_objects(objetos,posicao)
   	
 def resp1():
 	main.show_edges()
 	
 def resp2():
-	print(main.getActuallyPosition())
-	
+	# What is this room ?
+	print(main.search_room_category())
 
 def resp3():
 	pass
 	
 def resp4():
-    pass
+	# How much time is it to reach in 'escadas'
+    main.call_shortest_path('medico')
 
 def resp5():
 	# How much time is it to reach in 'escadas'
-    main.call_shortest_path()
+    main.call_shortest_path('Escadas')
 
 def resp6():
     pass

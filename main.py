@@ -2,6 +2,7 @@ import time
 import networkx as net
 import graph  as gph
 
+# List of Objects ----------------------------------------------------- #
 enfermeiro_list = []
 medico_list = []
 doente_list = []
@@ -9,53 +10,66 @@ livro_list = []
 cama_list = []
 cadeira_list = []
 mesa_list = []
-
+# --------------------------------------------------------------------- #
+# List of Rooms ------------------------------------------------------- #
+sala_dos_enfermeiros_list = []
+sala_de_espera_list = []
+quarto_list = []
+# --------------------------------------------------------------------- #
 # Init Variables ------------------------------------------------------ #
 position = ['Corredor 2']
 local_point = [[100,100]]
-#graph = net.Graph()
 graph = net.MultiGraph()
-#gph.init_graph(graph)
 speed = 245.6
-# --------------------------------------------------------------------- #
-
-def get_objects(obj):
-	cathegory = obj[0].split("_")[0]
-	dc = create_dictionary(obj)
-	
-	if(cathegory == 'enfermeiro'):
-		if dc not in enfermeiro_list:
-			enfermeiro_list.append(dc)
-		show_dictionary(enfermeiro_list)
+# --------------------------------------------------------------------- #		
+# Get the list of object and put in lists ----------------------------- #		
+def get_objects(object_list,local):
+	for obj in object_list:
+		cathegory = obj.split("_")[0]
 		
-	elif cathegory  == 'medico':
-		if dc not in medico_list:
-			medico_list.append(dc)
-		show_dictionary(medico_list)
-		
-	elif cathegory  == 'livro':
-		if dc not in livro_list:
-			livro_list.append(dc)
-		show_dictionary(livro_list)
-		
-	else:
-		print('nada')		
+		if(cathegory == 'enfermeiro'):
+			if obj not in enfermeiro_list:
+				enfermeiro_list.append(obj)
+				#create node and add in the graph
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(enfermeiro_list)
 			
-def create_dictionary(obj):
-	dc_objets = {
-		'name': obj[0],
-		'cathegory':obj[0].split("_")[0],
-		'local':'empty'
-	}
-	return dc_objets
-		
-def show_dictionary(list_dictionary):
-	"""
-	print('------------------------------')
-	for x in list_dictionary:
-		print(x['name'],' ',x['cathegory'])
-		"""
-
+		elif cathegory  == 'medico':
+			if obj not in medico_list:
+				medico_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(medico_list)
+			
+		elif cathegory  == 'livro':
+			if obj not in livro_list:
+				livro_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(livro_list)
+				
+		elif cathegory  == 'cama':
+			if obj not in cama_list:
+				cama_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(cama_list)
+				
+		elif cathegory  == 'cadeira':
+			if obj not in cadeira_list:
+				cadeira_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(cadeira_list)
+				
+		elif cathegory  == 'mesa':
+			if obj not in mesa_list:
+				mesa_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(mesa_list)
+				
+		elif cathegory  == 'doente':
+			if obj not in doente_list:
+				doente_list.append(obj)
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
+				print(doente_list)
+# --------------------------------------------------------------------- #	
 # Location ------------------------------------------------------------ #
 def actuallyLocation(pos):
 	local_point.clear()
@@ -112,17 +126,54 @@ def actuallyLocation(pos):
 def getPosition(pos):
 	if(pos != position[-1]):
 		position.append(pos)
-		
-
-	
+# --------------------------------------------------------------------- #		
 def getActuallyPosition():
 	return position
-
-def call_shortest_path():
-	path = gph.create_graph_distance_two_nodes(position,local_point,'Escadas',graph)
+# --------------------------------------------------------------------- #	
+def call_shortest_path(node):
+	if(node == 'medico'):
+		medicos = []
+		for medico in medico_list:
+			path = gph.create_graph_distance_two_nodes(position,local_point,medico,graph)
+			if(medicos == []):
+				medicos = path[:]
+			else:
+				if(path[0] < medicos[0]):
+					medicos = path[:]	
+		print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
+	else:
+		path = gph.create_graph_distance_two_nodes(position,local_point,node,graph)
+		print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
+# --------------------------------------------------------------------- #	
+# Search the category of this room ------------------------------------ #
+def search_room_category():
+	mesa = []
+	cadeira = []
+	for node in graph.edges(position[-1]):
+		category = node[1].split("_")[0]
+		if(category == 'cama'):
+			#print('Node:',position[-1],'Category: Quarto')
+			quarto_list.append(position[-1])
+			return 'Node:',position[-1],'Category: Quarto'
+		elif(category == 'mesa'):
+			mesa.append(node[1])
+		elif(category == 'cadeira'):
+			cadeira.append(node[1])
+	if(len(mesa) >= 1):
+		#print('Node:',position[-1],'Category: Sala de Enfermeiros')
+		sala_dos_enfermeiros_list.append(position[-1])
+		return 'Node:',position[-1],'Category: Sala de Enfermeiros'
+	elif(len(cadeira) > 2 and len(mesa) == 0):
+		#print('Node:',position[-1],'Category: Sala de Espera')
+		sala_de_espera_list.append(position[-1])
+		return 'Node:',position[-1],'Category: Sala de Espera'
+	else:
+		return 'Node:',position[-1],'Category: none'
+# --------------------------------------------------------------------- #	
 # Add Room or Object in the graph ------------------------------------- #
 def refresh_graph(posicao):
 	gph.searchRoomInGraph(getActuallyPosition(),posicao,graph)
 # --------------------------------------------------------------------- #
 def show_edges():
 	gph.show_edges(graph)
+# --------------------------------------------------------------------- #	
