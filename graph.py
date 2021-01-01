@@ -3,26 +3,26 @@ import math
 import networkx as net
 
 #Nesse ficheiro é onde manipulamos os grafos, e suas respectivas 
-#funcionalidades. Aqui adicionamos nodos ao grafo, adicionamos um vertice
+#funcionalidades. Aqui adicionamos nodos ao grafo, adicionamos um aresta
 #entre dois nodos, procuramos o menor caminho entre dois nodos e o tempo
 #para percorrer este caminho.
 	
 # add_node ------------------------------------------------------------ #
 def add_nodes(node1,node2,points,graph):
-	#Adiciona um vertice 'node1' com o 'node2' 
+	#Adiciona um aresta 'node1' com o 'node2' 
 	graph.add_edge(node1,node2,limits=points[:],weight=0)
 # --------------------------------------------------------------------- #
 # Search_Room --------------------------------------------------------- #
 def search_room_in_graph(localList,weight,graph):
 	#Verifica se o node em que o agente estar atualmente já esta conectada	
-	#com outro vertice dentro do grafo
+	#com outro aresta dentro do grafo
 	if len(localList) > 1:
 		if not graph.has_edge(localList[-1],localList[-2]):
 			add_nodes(localList[-1],localList[-2],weight,graph)
 # --------------------------------------------------------------------- #
 # Add obj in the graph in it position --------------------------------- #
 def add_obj_graph(localList,obj,weight,graph):
-	#Adiciona um vertice entre um 'obj' com a posiçao atual do agente
+	#Adiciona um aresta entre um 'obj' com a posiçao atual do agente
 	#(que seria o node atual)
 	if not graph.has_edge(localList[-1],obj):
 		print('Adicionado',obj,localList[-1])
@@ -44,21 +44,21 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 	
 	#Esta função ajuda para encontrar o menor caminho entre dois nodos, e
 	#para isso é criado um multigrafo (permite fazer dois nodos se 
-	#conectarem mais de uma vez) e com ele é criado vertices que 
+	#conectarem mais de uma vez) e com ele é criado arestas que 
 	#representam a distancia entre dois nodos mas levando em conta o 
 	#destino, ou seja é quardado o 'weight' dos dois nodos levando em 
 	#conta de onde eu estou para onde estou indo.
 	#Exemplo: 
 	#node1 (corredor 1)
 	#node2 (corredor 2)
-	#Vertice1 (node1,node2,weight=100,indo=Escadas)
-	#Vertice2 (node1,node2,weight=300,indo=Corredor 3)
-	#Vertice3 (node1,node2,weight=200,indo=Sala 5)
+	#aresta1 (node1,node2,weight=100,indo=Escadas)
+	#aresta2 (node1,node2,weight=300,indo=Corredor 3)
+	#aresta3 (node1,node2,weight=200,indo=Sala 5)
 	#Ou seja, dependedo do meu objetivo de destino o peso 'weight' tem
 	#diferentes valores, com isso podemos saber qual e o menor caminho.
 	
 	#Parte 1:
-	#Nesta parte não e criado vertices auxiliares pois, o nodo manipulado 
+	#Nesta parte não e criado arestas auxiliares pois, o nodo manipulado 
 	#aqui e o nodo onde o agente estar, ou seja so e dado a distancia do
 	#agente até as saidas do nodo.
 	graph2 = graph.copy()
@@ -68,7 +68,7 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 		cost = distance_two_points(point1,point2)
 		graph2[position[-1]][node][0]['weight'] = cost	
 	#Parte 2:
-	#Nesta parte que e feito os vertices auxiliares em todos os nodos
+	#Nesta parte que e feito os arestas auxiliares em todos os nodos
 	#e suas saidas e objetivos
 	for node in graph2.nodes():
 		if node != position[-1]:
@@ -82,7 +82,7 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 							graph2.add_edge(node,edge2,limit=point2,weight=cost,going=edge1)
 							graph2[node][edge2][0]['weight'] = cost
 							graph2[node][edge2][0]['going'] = edge1
-	#Apos ser criado o multigrafo já com todos os vertices auxiliares e 
+	#Apos ser criado o multigrafo já com todos os arestas auxiliares e 
 	#enviado para 'search_path_two_nodes' que vai encontrar o menor path
 	return search_path_two_nodes(graph2,local_points,position,local)
 # --------------------------------------------------------------------- #
@@ -107,7 +107,7 @@ def search_path_two_nodes(graph,local_points,position,local):
 # --------------------------------------------------------------------- #
 # Distance between two nodes ------------------------------------------ #
 def distance_two_nodes(graph,path):
-	#Função auxiliar que ajudara a somar os 'weight' de cada vertice do
+	#Função auxiliar que ajudara a somar os 'weight' de cada aresta do
 	#path dado na função.
 	distance = 0
 	for pos in range(len(path)):
@@ -130,9 +130,9 @@ def distance_two_nodes(graph,path):
 # The distance between two points ------------------------------------- #		
 def distance_two_points(point1,point2):
 	#Função responsavel por aplicar o teorema de pitagora (a distancia 
-	#entre dois pontos e uma linha reta: X^2 + Y^2 = z^2), recebe dois 
-	#pontos e calcula sua hipotenusa entre esse dois pontos.
-	#O resultado dessa função e colocado nos 'weight' nas funções 
+	#entre dois pontos é uma linha reta: X^2 + Y^2 = z^2), recebe dois 
+	#pontos e calcula sua hipotenusa entre esses dois pontos.
+	#O resultado dessa função é colocado nos 'weight' dos nodos nas funções 
 	#create_graph_distance_two_nodes e search_path_two_nodes.
 	x1 = 0
 	y1 = 0
