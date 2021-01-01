@@ -3,6 +3,7 @@ import networkx as net
 import graph  as gph
 
 # List of Objects ----------------------------------------------------- #
+pessoa_list = []
 enfermeiro_list = []
 medico_list = []
 doente_list = []
@@ -30,45 +31,48 @@ def get_objects(object_list,local):
 		if(cathegory == 'enfermeiro'):
 			if obj not in enfermeiro_list:
 				enfermeiro_list.append(obj)
+				pessoa_list.append(obj)
 				#create node and add in the graph
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(enfermeiro_list)
+				#print(enfermeiro_list)
 			
 		elif cathegory  == 'medico':
 			if obj not in medico_list:
 				medico_list.append(obj)
+				pessoa_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(medico_list)
+				#print(medico_list)
 			
 		elif cathegory  == 'livro':
 			if obj not in livro_list:
 				livro_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(livro_list)
+				#print(livro_list)
 				
 		elif cathegory  == 'cama':
 			if obj not in cama_list:
 				cama_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(cama_list)
+				#print(cama_list)
 				
 		elif cathegory  == 'cadeira':
 			if obj not in cadeira_list:
 				cadeira_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(cadeira_list)
+				#print(cadeira_list)
 				
 		elif cathegory  == 'mesa':
 			if obj not in mesa_list:
 				mesa_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(mesa_list)
+				#print(mesa_list)
 				
 		elif cathegory  == 'doente':
 			if obj not in doente_list:
 				doente_list.append(obj)
+				pessoa_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				print(doente_list)
+				#print(doente_list)
 # --------------------------------------------------------------------- #	
 # Location ------------------------------------------------------------ #
 def actuallyLocation(pos):
@@ -171,21 +175,21 @@ def search_room_category():
 				sala_de_espera_list.remove(position[-1])
 			if(position[-1] in sala_dos_enfermeiros_list):
 				sala_dos_enfermeiros_list.remove(position[-1])
-		return 'Node:',position[-1],'Category: Quarto'		
+		return 'Node: ' + position[-1] + ' Category: Quarto'		
 	elif(len(mesa) >= 1 and len(cama) == 0 and len(cadeira) >= 1):
 		#print('Node:',position[-1],'Category: Sala de Enfermeiros')
 		if(position[-1] not in sala_dos_enfermeiros_list):
 			sala_dos_enfermeiros_list.append(position[-1])
 			if(position[-1] in sala_de_espera_list):
 				sala_de_espera_list.remove(position[-1])
-		return 'Node:',position[-1],'Category: Sala de Enfermeiros'
+		return 'Node: ' + position[-1] + ' Category: Sala de Enfermeiros'
 	elif(len(cadeira) > 2 and len(mesa) == 0):
 		#print('Node:',position[-1],'Category: Sala de Espera')
 		if(position[-1] not in sala_de_espera_list):
 			sala_de_espera_list.append(position[-1])
-		return 'Node:',position[-1],'Category: Sala de Espera'
+		return 'Node: ' + position[-1] + ' Category: Sala de Espera'
 	else:
-		return 'Node:',position[-1],'Category: none'
+		return 'Node: ' + position[-1] + ' Category: none'
 # --------------------------------------------------------------------- #	
 # Add Room or Object in the graph ------------------------------------- #
 def refresh_graph(posicao):
@@ -216,3 +220,13 @@ def shortest_path_enfermaria():
 		return enfermaria
 	else:
 		return 'None'
+# --------------------------------------------------------------------- #
+# Question 1 ---------------------------------------------------------- #
+def get_penult_person():
+	if(pessoa_list == []):
+		return 'Not found anyone!'
+	elif(len(pessoa_list) >= 2):
+		return 'Penult: ' + pessoa_list[-2] + '!'
+	else:
+		return 'Only found 1 person!' +'\nPerson: ' + pessoa_list[0]
+		
