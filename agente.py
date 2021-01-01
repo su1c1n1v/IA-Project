@@ -16,7 +16,7 @@ import graph
 bat = []
 power = []
 def work(posicao, bateria, objetos):
-	main.actuallyLocation(posicao)
+	main.actually_location(posicao)
 	main.refresh_graph(posicao)
 	main.search_room_category()
 	if(power == []):
@@ -63,6 +63,7 @@ def resp5():
     main.call_shortest_path('Escadas')
 
 def resp6():
+	# How much time is to the baterie to be empty?
 	moving = (power[0]/100)*2.068
 	stopped = (power[0]/100)*3.086
 	average = (moving+stopped)/2
