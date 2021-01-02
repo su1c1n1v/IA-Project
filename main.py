@@ -16,6 +16,7 @@ mesa_list = []
 sala_dos_enfermeiros_list = []
 sala_de_espera_list = []
 quarto_list = []
+corredor_list = ['Corredor 1','Corredor 2','Corredor 3','Corredor 4']
 # --------------------------------------------------------------------- #
 # Init Variables ------------------------------------------------------ #
 position = ['Corredor 2']
@@ -162,24 +163,24 @@ def call_shortest_path(node):
 						medicos = path[:]
 			print('Distance',medicos[0],'\nTime',medicos[1],'\nPath',medicos[2])
 		else:
-			print('None')
+			print('Any "Medico found!"')
 	else:
 		if(node in graph.nodes()):
 			path = gph.create_graph_distance_two_nodes(position,local_point,node,graph)
 			print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
 		else:
-			print('None')
+			print('There is no',node,'in the graph!')
 # --------------------------------------------------------------------- #	
 # Search the category of this room ------------------------------------ #
 def search_room_category():
 	#Questão 2: Categoriza a sala dependedo dos objetos encontrados dentro
 	#da sala atual, para isso e percorrido todos os arestas da sala, e 
-	#verifica se cumpre com os requisitos para ser uma 'Sala de enfermeiros'
-	#, 'Sala de espera' ou 'quarto'.
+	#verifica se cumpre com os requisitos para ser uma 'Sala de enfermeiros',
+	#'Sala de espera' ou 'quarto'.
 	mesa = []
 	cadeira = []
 	cama = []
-	#Conta quantas camas, mesas e cadeira tem na sala
+	#Conta quantas camas, mesas e cadeira tem na sala.
 	for node in graph.edges(position[-1]):
 		category = node[1].split("_")[0]
 		if(category == 'cama'):
@@ -188,8 +189,8 @@ def search_room_category():
 			mesa.append(node[1])
 		elif(category == 'cadeira'):
 			cadeira.append(node[1])
-	#Dependendo do objeto encontrado e determinado que tipo de sala o 
-	#agente estar
+	#Dependendo do objeto encontrado é determinado que tipo de sala o 
+	#agente estar.
 	if(len(cama) >= 1):	
 		if(position[-1] not in quarto_list):
 			quarto_list.append(position[-1])
@@ -279,46 +280,136 @@ def question7():
 	total_quarto = len(quarto_list)
 	total_livro = len(livro_list)
 	total_cadeira = len(cadeira_list)
+	total_corredor = len(corredor_list)
+	total_divisoes = total_espera + total_enfermaria + total_quarto + total_corredor
 	
 	total_livro_sala_espera = how_much_obj_has_in_the_room(sala_de_espera_list,'livro')
 	total_livro_quarto = how_much_obj_has_in_the_room(quarto_list,'livro')
 	total_livro_sala_de_enfermeiros = how_much_obj_has_in_the_room(sala_dos_enfermeiros_list,'livro')
+	total_livro_corredor = how_much_obj_has_in_the_room(corredor_list,'livro')
 	
 	total_cadeira_sala_espera = how_much_obj_has_in_the_room(sala_de_espera_list,'cadeira')
 	total_cadeira_quarto = how_much_obj_has_in_the_room(quarto_list,'cadeira')
 	total_cadeira_sala_de_enfermeiros = how_much_obj_has_in_the_room(sala_dos_enfermeiros_list,'cadeira')
+	total_cadeira_corredor = how_much_obj_has_in_the_room(corredor_list,'cadeira')
 	
 	#Resolução livro e cadeira sendo independente ---------------------
-	resposta1 = (total_livro/10)*100
+	resposta1 = (total_livro/total_divisoes)*100
 	
 	#Resolução usando bayseana ----------------------------------------
 	#Probabilidade da sala ser uma "sala de espera", vezes a chance de 
 	#encontrar uma cadeira, vezes a chance de encontrar um livro
-	espera = (total_espera/10) * 1 * (total_livro_sala_espera/total_livro)
+	espera = 0.0
+	if(total_espera != 0 and total_livro_sala_espera != 0 and total_livro != 0):
+		espera = (total_espera/total_divisoes) * 1 * (total_livro_sala_espera/total_livro)
 	
 	#Probabilidade da sala ser uma "Sala de enfermeiros" vezes a chance 
 	#de encontrar uma cadeira, vezes a chance de encontrar um livro.
-	enfermaria = (total_enfermaria/10) * 1 * (total_livro_sala_de_enfermeiros/total_livro)
+	enfermaria = 0.0
+	if(total_enfermaria != 0 and total_livro_sala_de_enfermeiros != 0 and total_livro != 0):
+		enfermaria = (total_enfermaria/total_divisoes) * 1 * (total_livro_sala_de_enfermeiros/total_livro)
 	
 	#Probabilidade da sala ser um "Quarto" vezes a chance de ter uma 
 	#cadeira, vezes a chance de ter um livro no quarto 
-	quarto = (total_quarto/10) * (total_cadeira/10) * (total_livro_quarto/total_livro)
+	quarto = 0.0
+	if(total_quarto != 0 and total_cadeira != 0 and total_livro_quarto != 0 and total_livro != 0):
+		quarto = (total_quarto/total_divisoes) * (total_cadeira_quarto/total_cadeira) * (total_livro_quarto/total_livro)
+	
+	#Probabilidade da divisao ser um "Corredor" vezes a chance de ter uma 
+	#cadeira, vezes a chance de ter um livro no corredor 
+	corredor = 0.0
+	if(total_corredor != 0 and total_cadeira != 0 and total_livro_corredor != 0 and total_livro != 0):
+		corredor = (total_corredor/total_divisoes) * (total_cadeira_corredor/total_cadeira) * (total_livro_corredor/total_livro)
 	
 	#Resolução ultilizando bayseana
 	reposta2 = (espera + enfermaria + quarto)*100
 	#Retorna as duas respostas
 	return [resposta1,reposta2]
 # --------------------------------------------------------------------- #
+# Question 8 ---------------------------------------------------------- # 
+def question8():
+	#Nesta questão foi feita usando duas maneiras
+	#1º sendo o livro, e a cadeira independentes
+	#2º usando as salas como fator de dependencia entre os objetos, para
+	#ser possivel usar redes  bayesianas
+	
+	#Para resolver esta questão usando probabilidade condicional, e 
+	#necessario que a gente pegue as chance de ser uma sala ou corredor.
+	total_espera = len(sala_de_espera_list)
+	total_enfermaria = len(sala_dos_enfermeiros_list)
+	total_quarto = len(quarto_list)
+	total_escadas = len(corredor_list)
+	total_divisoes = total_quarto + total_escadas + total_espera + total_enfermaria
+	
+	#Pegamos a guantidade de doentes e enfermerios, com isso podemos 
+	#calcular porcentage de chance de encontrar esse objetos.
+	total_doente = len(doente_list)
+	total_enfermeiro = len(enfermeiro_list)
+	
+	#Na resposta 1 como doentes e enfermeiros são independentes, não há
+	#porcentagem condicional, ou seja só precisamos da chance de encontrar
+	#um doente. 
+	#A chance de encontrar um doente em uma divisão.
+	resposta1 = (total_doente/total_divisoes)*100
+	
+	#Para resolver esta questão na segunda maneira, pegamos a chances de 
+	#encontrar um doente em uma sala especifica, e pegamos as chances de
+	#encontrar um enfermeiro em uma divisão, com isso podemos fazer um
+	#calculo condicional entre encontrar um enfermeiro e um doente.
+	total_doente_espera = how_much_obj_has_in_the_room(sala_de_espera_list,'doente')
+	total_doente_enfermaria = how_much_obj_has_in_the_room(sala_dos_enfermeiros_list,'doente')
+	total_doente_quarto = how_much_obj_has_in_the_room(quarto_list,'doente')
+	total_doente_corredor = how_much_obj_has_in_the_room(corredor_list,'doente')
+	
+	total_enfermeiro_espera = how_much_obj_has_in_the_room(sala_de_espera_list,'enfermeiro')
+	total_enfermeiro_quarto = how_much_obj_has_in_the_room(quarto_list,'enfermeiro')
+	total_enfermeiro_enfermaria = how_much_obj_has_in_the_room(sala_dos_enfermeiros_list,'enfermeiro')
+	total_enfermeiro_corredor = how_much_obj_has_in_the_room(corredor_list,'enfermeiro')
+	
+	#Calculo 1: Chance de encontrar um doente em uma sala de espera sabendo
+	#que ja encontramos um enfermeiro.
+	espera = 0.0
+	if(total_espera != 0 and total_enfermeiro_espera != 0 and total_doente != 0 and total_doente_espera != 0):
+		espera = (total_espera/total_divisoes) * (total_enfermeiro_espera/total_enfermeiro) * (total_doente_espera/total_doente)
+	
+	#Calculo 2: Chance de encontrar um doente em um quarto sabendo
+	#que ja encontramos um enfermeiro.
+	quarto = 0.0
+	if(total_quarto != 0 and total_enfermeiro_quarto != 0 and total_doente != 0 and total_doente_quarto != 0):
+		quarto = (total_quarto/total_divisoes) * (total_enfermeiro_quarto/total_enfermeiro) * (total_doente_quarto/total_doente)
+	
+	#Calculo 3: Chance de encontrar um doente em um sala de enfermeiro
+	#sabendo que ja encontramos um enfermeiro.
+	enfermaria = 0.0
+	if(total_enfermaria != 0 and total_enfermeiro_enfermaria != 0 and total_doente != 0 and total_doente_enfermaria != 0):
+		enfermaria = (total_enfermaria/total_divisoes) * (total_enfermeiro_enfermaria/total_enfermeiro) * (total_doente_enfermaria/total_doente)
+	
+	#Calculo 4: Chance de encontrar um doente em no corredor sabendo que 
+	#ja encontramos um enfermeiro.
+	corredor = 0.0
+	if(total_enfermaria != 0 and total_enfermeiro_corredor != 0 and total_doente != 0 and total_doente_corredor != 0):
+		corredor = (total_corredor/total_divisoes) * (total_enfermeiro_corredor/total_enfermeiro) * (total_doente_corredor/total_doente)
+	
+	#A soma de todas as divisões para ter um todo.
+	resposta2 = (espera + enfermaria + quarto + corredor)*100
+	
+	#OBS: A segunda opção usa probabilidade codicional para calcular,
+	#como as chances são baseadas no que é encontrado no mapa, ou seja,
+	#pega quantas vezes encontramos um doente e enfermeiro no corredo, quarto,... 
+	#,e em alguns casos vai ser zero, ou seja não e encontrado nenhum 
+	#doente e enfermeiro juntos na mesma divisão, então as chances são zero.
+	
+	return [resposta1,resposta2]
+# --------------------------------------------------------------------- #
 # Look how much 'obj' has in this room -------------------------------- # 
 def how_much_obj_has_in_the_room(list_obj,obj):
-	#Função auxiliar, que tem o proposito de ajuda a contar quanto objetos
-	#do tipo 'obj' (dado como parametro da função) estão interligados atraves 
-	#de um aresta com a sala atual
+	#Função auxiliar, que tem o proposito de ajuda a contabilizar quantos
+	#objetos do tipo 'obj' (dado como parametro da função, que e nome da 
+	#categoria de objeto) estão interligados atraves de um aresta com a 
+	#sala atual
 	count = 0
 	for node in list_obj:
-		print('-------------')
 		for edge in graph.edges(node):
-			print(edge)
 			if(edge[0].split("_")[0] == obj):
 				count = count + 1
 			if(edge[1].split("_")[0] == obj):

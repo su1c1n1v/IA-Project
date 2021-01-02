@@ -15,7 +15,7 @@ def add_nodes(node1,node2,points,graph):
 # Search_Room --------------------------------------------------------- #
 def search_room_in_graph(localList,weight,graph):
 	#Verifica se o node em que o agente estar atualmente já esta conectada	
-	#com outro aresta dentro do grafo
+	#com outra aresta dentro do grafo
 	if len(localList) > 1:
 		if not graph.has_edge(localList[-1],localList[-2]):
 			add_nodes(localList[-1],localList[-2],weight,graph)
@@ -25,12 +25,13 @@ def add_obj_graph(localList,obj,weight,graph):
 	#Adiciona um aresta entre um 'obj' com a posiçao atual do agente
 	#(que seria o node atual)
 	if not graph.has_edge(localList[-1],obj):
-		print('Adicionado',obj,localList[-1])
+		#print('Adicionado',obj,localList[-1])
 		add_nodes(localList[-1],obj,weight,graph)
 # --------------------------------------------------------------------- #
 # Show all edges ------------------------------------------------------ #
 def show_edges(graph):
-	#Mostra na linha de comando todos os edges já adicionado no grafo (debug)
+	#Mostra na linha de comando todos os edges já adicionado no grafo 
+	#(debug).
 	sp = dict(net.all_pairs_dijkstra_path(graph))
 	print('Grafo ',graph.edges())
 	for node in graph.nodes():
@@ -82,8 +83,8 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 							graph2.add_edge(node,edge2,limit=point2,weight=cost,going=edge1)
 							graph2[node][edge2][0]['weight'] = cost
 							graph2[node][edge2][0]['going'] = edge1
-	#Apos ser criado o multigrafo já com todos os arestas auxiliares e 
-	#enviado para 'search_path_two_nodes' que vai encontrar o menor path
+	#Apos ser criado o multigrafo já com todos as arestas auxiliares é 
+	#enviado para 'search_path_two_nodes' que vai encontrar o menor path.
 	return search_path_two_nodes(graph2,local_points,position,local)
 # --------------------------------------------------------------------- #
 # Search the best path for two nodes ---------------------------------- #
