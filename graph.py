@@ -27,6 +27,14 @@ def searchRoomInGraph(localList,weight,graph):
 			add_nodes(localList[-1],localList[-2],weight,graph)
 			print(graph.edges())
 # --------------------------------------------------------------------- #
+# Add obj in the graph in it position --------------------------------- #
+def add_obj_graph(localList,obj,weight,graph):
+	if graph.has_edge(localList[-1],obj):
+		return
+	else:
+		add_nodes(localList[-1],obj,weight,graph)
+		print(graph.edges(),weight)
+# --------------------------------------------------------------------- #
 # Show all edges ------------------------------------------------------ #
 def show_edges(graph):
 	sp = dict(net.all_pairs_dijkstra_path(graph))
@@ -44,7 +52,7 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 		point2 = local_points[0]							
 		cost = distance_two_points(point1,point2)
 		graph2[position[-1]][node][0]['weight'] = cost
-		print(position[-1],node,cost)	
+		#print(position[-1],node,cost)	
 	for node in graph2.nodes():
 		if node != position[-1]:
 			for edge1 in graph2[node]:
@@ -53,12 +61,12 @@ def create_graph_distance_two_nodes(position,local_points,local,graph):
 					for edge2 in graph2[node]:
 						if(edge2 != edge1 and edge1 != position[-1]):
 							point2 = graph2[node][edge2][0]['limits']
-							print('Center:',node,'|Node 1:',edge1,'|Node 2:',edge2)	
+							#print('Center:',node,'|Node 1:',edge1,'|Node 2:',edge2)	
 							cost = distance_two_points(point1,point2)
 							graph2.add_edge(node,edge2,limit=point2,weight=cost,comming=edge1)
 							graph2[node][edge2][0]['weight'] = cost
 							graph2[node][edge2][0]['comming'] = edge1
-	search_path_two_nodes(graph2,local_points,position,local)
+	return search_path_two_nodes(graph2,local_points,position,local)
 # --------------------------------------------------------------------- #
 # Search the best path for two nodes ---------------------------------- #
 def search_path_two_nodes(graph,local_points,position,local):
@@ -68,9 +76,9 @@ def search_path_two_nodes(graph,local_points,position,local):
 		cost = distance_two_points(point1,point2)
 		graph[position[-1]][node][0]['weight'] = cost
 		graph[position[-1]][node][0]['comming'] = 'local'
-	sp = dict(net.all_pairs_shortest_path(graph))
+	sp = dict(net.all_pairs_dijkstra_path(graph))
 	path = sp[position[-1]][local]
-	distance_two_nodes(graph,path)
+	return distance_two_nodes(graph,path)
 # --------------------------------------------------------------------- #
 # Distance between two nodes ------------------------------------------ #
 def distance_two_nodes(graph,path):
@@ -84,14 +92,16 @@ def distance_two_nodes(graph,path):
 						if(graph[path[pos]][path[pos+1]][keys]['comming'] == path[pos+2]):
 							distance = distance + graph[path[pos]][path[pos+1]][keys]['weight']
 							break
-					print('Distance:',distance,'\nTime:',distance/245.6,'\nPath:',path)
-					return	
+					#print('Distance:',distance,'\nTime:',distance/245.6,'\nPath:',path)
+					return [distance,distance/245.6,path]
 			if(pos+2 < len(path)):
 				for keys in graph[path[pos]][path[pos+1]]:
 					if(graph[path[pos]][path[pos+1]][keys]['comming'] == path[pos+2]):
 						distance = distance + graph[path[pos]][path[pos+1]][keys]['weight']
 						break
-	print('Distance:',distance,'\nTime:',distance/245.6,'\nPath:',path)
+	#print(graph.edges(keys=True,data=True))
+	#print('Distance:',distance,'\nTime:',distance/245.6,'\nPath:',path)
+	return [distance,distance/245.6,path]
 # --------------------------------------------------------------------- #
 # The distance between two points ------------------------------------- #		
 def distance_two_points(point1,point2):
