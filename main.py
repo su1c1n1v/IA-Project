@@ -133,39 +133,56 @@ def getActuallyPosition():
 def call_shortest_path(node):
 	if(node == 'medico'):
 		medicos = []
-		for medico in medico_list:
-			path = gph.create_graph_distance_two_nodes(position,local_point,medico,graph)
-			if(medicos == []):
-				medicos = path[:]
-			else:
-				if(path[0] < medicos[0]):
-					medicos = path[:]	
-		print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
+		if(len(medico_list) >= 1):
+			for medico in medico_list:
+				path = gph.create_graph_distance_two_nodes(position,local_point,medico,graph)
+				if(medicos == []):
+					medicos = path[:]
+				else:
+					if(path[0] < medicos[0]):
+						medicos = path[:]
+			print('Distance',medicos[0],'\nTime',medicos[1],'\nPath',medicos[2])
+		else:
+			print('None')
 	else:
-		path = gph.create_graph_distance_two_nodes(position,local_point,node,graph)
-		print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
+		if(node in graph.nodes()):
+			path = gph.create_graph_distance_two_nodes(position,local_point,node,graph)
+			print('Distance',path[0],'\nTime',path[1],'\nPath',path[2])
+		else:
+			print('None')
 # --------------------------------------------------------------------- #	
 # Search the category of this room ------------------------------------ #
 def search_room_category():
 	mesa = []
 	cadeira = []
+	cama = []
 	for node in graph.edges(position[-1]):
 		category = node[1].split("_")[0]
 		if(category == 'cama'):
-			#print('Node:',position[-1],'Category: Quarto')
-			quarto_list.append(position[-1])
-			return 'Node:',position[-1],'Category: Quarto'
+			cama.append(node[1])
 		elif(category == 'mesa'):
 			mesa.append(node[1])
 		elif(category == 'cadeira'):
 			cadeira.append(node[1])
-	if(len(mesa) >= 1):
+	if(len(cama) >= 1):	
+		if(position[-1] not in quarto_list):
+			quarto_list.append(position[-1])
+			if(position[-1] in sala_de_espera_list):
+				sala_de_espera_list.remove(position[-1])
+			if(position[-1] in sala_dos_enfermeiros_list):
+				sala_dos_enfermeiros_list.remove(position[-1])
+		return 'Node:',position[-1],'Category: Quarto'		
+	elif(len(mesa) >= 1 and len(cama) == 0 and len(cadeira) >= 1):
 		#print('Node:',position[-1],'Category: Sala de Enfermeiros')
-		sala_dos_enfermeiros_list.append(position[-1])
+		if(position[-1] not in sala_dos_enfermeiros_list):
+			sala_dos_enfermeiros_list.append(position[-1])
+			if(position[-1] in sala_de_espera_list):
+				sala_de_espera_list.remove(position[-1])
 		return 'Node:',position[-1],'Category: Sala de Enfermeiros'
 	elif(len(cadeira) > 2 and len(mesa) == 0):
 		#print('Node:',position[-1],'Category: Sala de Espera')
-		sala_de_espera_list.append(position[-1])
+		if(position[-1] not in sala_de_espera_list):
+			sala_de_espera_list.append(position[-1])
 		return 'Node:',position[-1],'Category: Sala de Espera'
 	else:
 		return 'Node:',position[-1],'Category: none'
@@ -177,3 +194,25 @@ def refresh_graph(posicao):
 def show_edges():
 	gph.show_edges(graph)
 # --------------------------------------------------------------------- #	
+def show_all_rooms_categories():
+	for node in quarto_list:
+		print('Quarto:',node)	
+	for node in sala_de_espera_list:
+		print('Sala de Espera:',node)
+	for node in sala_dos_enfermeiros_list:
+		print('Sala dos Enfermeiros:',node)
+		
+def shortest_path_enfermaria():
+	enfermaria = []
+	if(len(sala_dos_enfermeiros_list) >= 1):
+		for node in sala_dos_enfermeiros_list:
+			path = gph.create_graph_distance_two_nodes(position,local_point,node,graph)
+			if(enfermaria == []):
+				enfermaria.append(path)
+			else:
+				if(enfermaria[-1][0] > path[0]):
+					enfermaria.clear()
+					enfermaria.append(path)
+		return enfermaria
+	else:
+		return 'None'

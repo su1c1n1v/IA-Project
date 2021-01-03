@@ -16,6 +16,7 @@ import graph
 def work(posicao, bateria, objetos):
 	main.actuallyLocation(posicao)
 	main.refresh_graph(posicao)
+	main.search_room_category()
 	if objetos != []:
 		main.get_objects(objetos,posicao)
   	
@@ -27,14 +28,19 @@ def resp2():
 	print(main.search_room_category())
 
 def resp3():
-	pass
+	#What is the closest 'sala dos enfermeiros'?
+	path = main.shortest_path_enfermaria()
+	if(path == 'None'):
+		print(path)
+	else:
+		print('Distance:',path[0][0],'Time:',path[0][1],'Path:',path[0][2])
 	
 def resp4():
-	# How much time is it to reach in 'escadas'
+	# How much time is it to reach in 'medico'
     main.call_shortest_path('medico')
 
 def resp5():
-	# How much time is it to reach in 'escadas'
+	# How much time is it to reach in the 'escadas'?
     main.call_shortest_path('Escadas')
 
 def resp6():
