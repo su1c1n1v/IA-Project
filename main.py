@@ -27,55 +27,45 @@ speed = 245.6
 def get_objects(object_list,local):
 	for obj in object_list:
 		cathegory = obj.split("_")[0]
-		
+		if(cathegory == 'enfermeiro' or cathegory == 'medico'or cathegory == 'doente'):
+			if(len(pessoa_list) > 2):
+				pessoa_list.remove(pessoa_list[0])
+			if(len(pessoa_list) == 0):
+				pessoa_list.append(obj)
+			else:
+				if(pessoa_list[-1] != obj):
+					pessoa_list.append(obj)
 		if(cathegory == 'enfermeiro'):
 			if obj not in enfermeiro_list:
 				enfermeiro_list.append(obj)
-				pessoa_list.append(obj)
-				#create node and add in the graph
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(enfermeiro_list)
-			
 		elif cathegory  == 'medico':
 			if obj not in medico_list:
 				medico_list.append(obj)
-				pessoa_list.append(obj)
-				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(medico_list)
-			
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)	
 		elif cathegory  == 'livro':
 			if obj not in livro_list:
 				livro_list.append(obj)
-				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(livro_list)
-				
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)		
 		elif cathegory  == 'cama':
 			if obj not in cama_list:
 				cama_list.append(obj)
-				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(cama_list)
-				
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)				
 		elif cathegory  == 'cadeira':
 			if obj not in cadeira_list:
 				cadeira_list.append(obj)
-				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(cadeira_list)
-				
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)				
 		elif cathegory  == 'mesa':
 			if obj not in mesa_list:
 				mesa_list.append(obj)
-				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(mesa_list)
-				
+				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)				
 		elif cathegory  == 'doente':
 			if obj not in doente_list:
 				doente_list.append(obj)
-				pessoa_list.append(obj)
 				gph.add_obj_graph(getActuallyPosition(),obj,local,graph)
-				#print(doente_list)
 # --------------------------------------------------------------------- #	
-# Location ------------------------------------------------------------ #
-def actuallyLocation(pos):
+# Refresh the position of the machine --------------------------------- #
+def actually_location(pos):
 	local_point.clear()
 	local_point.append(pos)
 	x = pos[0]
@@ -126,14 +116,17 @@ def actuallyLocation(pos):
 	elif(x >= 615 and x <= 770 and y >= 455 and y <= 570):
 		position = "Sala 14"
 		getPosition(position)
-# --------------------------------------------------------------------- #		
+# --------------------------------------------------------------------- #
+# Refresh position  --------------------------------------------------- #		
 def getPosition(pos):
 	if(pos != position[-1]):
 		position.append(pos)
-# --------------------------------------------------------------------- #		
+# --------------------------------------------------------------------- #
+# Get the position ---------------------------------------------------- #		
 def getActuallyPosition():
 	return position
 # --------------------------------------------------------------------- #	
+# Call the shortest path to 'node' ------------------------------------ #
 def call_shortest_path(node):
 	if(node == 'medico'):
 		medicos = []
@@ -177,14 +170,12 @@ def search_room_category():
 				sala_dos_enfermeiros_list.remove(position[-1])
 		return 'Node: ' + position[-1] + ' Category: Quarto'		
 	elif(len(mesa) >= 1 and len(cama) == 0 and len(cadeira) >= 1):
-		#print('Node:',position[-1],'Category: Sala de Enfermeiros')
 		if(position[-1] not in sala_dos_enfermeiros_list):
 			sala_dos_enfermeiros_list.append(position[-1])
 			if(position[-1] in sala_de_espera_list):
 				sala_de_espera_list.remove(position[-1])
 		return 'Node: ' + position[-1] + ' Category: Sala de Enfermeiros'
 	elif(len(cadeira) > 2 and len(mesa) == 0):
-		#print('Node:',position[-1],'Category: Sala de Espera')
 		if(position[-1] not in sala_de_espera_list):
 			sala_de_espera_list.append(position[-1])
 		return 'Node: ' + position[-1] + ' Category: Sala de Espera'
@@ -193,11 +184,13 @@ def search_room_category():
 # --------------------------------------------------------------------- #	
 # Add Room or Object in the graph ------------------------------------- #
 def refresh_graph(posicao):
-	gph.searchRoomInGraph(getActuallyPosition(),posicao,graph)
+	gph.search_room_in_graph(getActuallyPosition(),posicao,graph)
 # --------------------------------------------------------------------- #
+# Show all edges in the graph ----------------------------------------- #
 def show_edges():
 	gph.show_edges(graph)
-# --------------------------------------------------------------------- #	
+# --------------------------------------------------------------------- #
+# Show all rooms and it categories ------------------------------------ #	
 def show_all_rooms_categories():
 	for node in quarto_list:
 		print('Quarto:',node)	
@@ -205,7 +198,8 @@ def show_all_rooms_categories():
 		print('Sala de Espera:',node)
 	for node in sala_dos_enfermeiros_list:
 		print('Sala dos Enfermeiros:',node)
-		
+# --------------------------------------------------------------------- #
+# The shortest path to the closest 'enfermaria' ----------------------- #
 def shortest_path_enfermaria():
 	enfermaria = []
 	if(len(sala_dos_enfermeiros_list) >= 1):
@@ -221,7 +215,7 @@ def shortest_path_enfermaria():
 	else:
 		return 'None'
 # --------------------------------------------------------------------- #
-# Question 1 ---------------------------------------------------------- #
+# Get the penult person found ----------------------------------------- #
 def get_penult_person():
 	if(pessoa_list == []):
 		return 'Not found anyone!'
@@ -229,4 +223,5 @@ def get_penult_person():
 		return 'Penult: ' + pessoa_list[-2] + '!'
 	else:
 		return 'Only found 1 person!' +'\nPerson: ' + pessoa_list[0]
+# --------------------------------------------------------------------- #
 		
