@@ -25,7 +25,7 @@ def searchRoomInGraph(localList,weight,graph):
 			return
 		else:
 			add_nodes(localList[-1],localList[-2],weight,graph)
-			print(graph.edges())
+			#print(graph.edges())
 # --------------------------------------------------------------------- #
 # Add obj in the graph in it position --------------------------------- #
 def add_obj_graph(localList,obj,weight,graph):
@@ -33,7 +33,7 @@ def add_obj_graph(localList,obj,weight,graph):
 		return
 	else:
 		add_nodes(localList[-1],obj,weight,graph)
-		print(graph.edges(),weight)
+		#print(graph.edges(),weight)
 # --------------------------------------------------------------------- #
 # Show all edges ------------------------------------------------------ #
 def show_edges(graph):
