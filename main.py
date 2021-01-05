@@ -28,7 +28,7 @@ def get_objects(object_list,local):
 	#Função mais importante, tem a funcionalidade de pegar os inputs 
 	#recebidos pelo agente e classifica o obj podendo se 'enfermeiro',
 	#'livro','medico','doente'... depois de classificar, é criado um 
-	#vinculo  do objeto com a sala (criado um vertice entre a sala e o 
+	#vinculo  do objeto com a sala (criado um aresta entre a sala e o 
 	#objeto)
 	for obj in object_list:
 		#Pega a categoria do objeto 
@@ -44,7 +44,7 @@ def get_objects(object_list,local):
 			else:
 				if(pessoa_list[-1] != obj):
 					pessoa_list.append(obj)
-		#Parte de categorizar o objeto e adiciona o vertice do objeto 
+		#Parte de categorizar o objeto e adiciona o aresta do objeto 
 		#a sala.
 		if(cathegory == 'enfermeiro'):
 			if obj not in enfermeiro_list:
@@ -173,7 +173,7 @@ def call_shortest_path(node):
 # Search the category of this room ------------------------------------ #
 def search_room_category():
 	#Questão 2: Categoriza a sala dependedo dos objetos encontrados dentro
-	#da sala atual, para isso e percorrido todos os vertices da sala, e 
+	#da sala atual, para isso e percorrido todos os arestas da sala, e 
 	#verifica se cumpre com os requisitos para ser uma 'Sala de enfermeiros'
 	#, 'Sala de espera' ou 'quarto'.
 	mesa = []
@@ -213,14 +213,14 @@ def search_room_category():
 # --------------------------------------------------------------------- #	
 # Add Room or Object in the graph ------------------------------------- #
 def refresh_graph(posicao):
-	#Atualiza o grafo, e verifica se o node atual ja possui um vertice 
-	#dentro do grafo, se tiver não faz nada, se não tiver, adiciona um vertice
+	#Atualiza o grafo, e verifica se o node atual ja possui um aresta 
+	#dentro do grafo, se tiver não faz nada, se não tiver, adiciona um aresta
 	#o node atual com o anterior
 	gph.search_room_in_graph(getActuallyPosition(),posicao,graph)
 # --------------------------------------------------------------------- #
 # Show all edges in the graph ----------------------------------------- #
 def show_edges():
-	#Mostra na linha de comando todos os vertices já adicionados no grafo
+	#Mostra na linha de comando todos os arestas já adicionados no grafo
 	gph.show_edges(graph)
 # --------------------------------------------------------------------- #
 # Show all rooms and it categories ------------------------------------ #	
@@ -291,28 +291,29 @@ def question7():
 	#Resolução livro e cadeira sendo independente ---------------------
 	resposta1 = (total_livro/10)*100
 	
-	#Resolução suando bayseana ----------------------------------------
+	#Resolução usando bayseana ----------------------------------------
 	#Probabilidade da sala ser uma "sala de espera", vezes a chance de 
 	#encontrar uma cadeira, vezes a chance de encontrar um livro
 	espera = (total_espera/10) * 1 * (total_livro_sala_espera/total_livro)
 	
 	#Probabilidade da sala ser uma "Sala de enfermeiros" vezes a chance 
-	#de encontrar uma cadeira, vezes a chance de encontrar um livro 
-	#nesta sala
+	#de encontrar uma cadeira, vezes a chance de encontrar um livro.
 	enfermaria = (total_enfermaria/10) * 1 * (total_livro_sala_de_enfermeiros/total_livro)
 	
 	#Probabilidade da sala ser um "Quarto" vezes a chance de ter uma 
 	#cadeira, vezes a chance de ter um livro no quarto 
 	quarto = (total_quarto/10) * (total_cadeira/10) * (total_livro_quarto/total_livro)
+	
 	#Resolução ultilizando bayseana
 	reposta2 = (espera + enfermaria + quarto)*100
-	
+	#Retorna as duas respostas
 	return [resposta1,reposta2]
 # --------------------------------------------------------------------- #
 # Look how much 'obj' has in this room -------------------------------- # 
 def how_much_obj_has_in_the_room(list_obj,obj):
 	#Função auxiliar, que tem o proposito de ajuda a contar quanto objetos
-	#do tipo 'obj' estão interligados atraves de um vertice com a sala atual
+	#do tipo 'obj' (dado como parametro da função) estão interligados atraves 
+	#de um aresta com a sala atual
 	count = 0
 	for node in list_obj:
 		print('-------------')
