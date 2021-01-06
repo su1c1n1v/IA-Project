@@ -6,7 +6,7 @@ e quaisquer outras que achem necessário criar
 
 colocar aqui os nomes e número de aluno:
 40681, Vinicius Rodrigues Silva Costa
-NUM2, Miguel
+28732, Miguel Tavares Frias
 """
 
 import time
