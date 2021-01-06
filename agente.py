@@ -13,8 +13,8 @@ import time
 import main
 import graph
 
-bat = []
 power = []
+print('In the beginning the agent dont know his location and any information about his world!')
 def work(posicao, bateria, objetos):
 	#Função que auxilia na atualização da posição do agente
 	main.actually_location(posicao)
@@ -30,17 +30,6 @@ def work(posicao, bateria, objetos):
 		power.append(bateria)
 	if objetos != []:
 		main.get_objects(objetos,posicao)
-	"""
-	if(bat == [] and len(bat) == 0 or bateria == 100):
-		if(bateria == 100):
-			bat.clear()
-		bat.append([bateria,time.time()])
-		print('Primeiro:',bat)
-	if(bateria == 0.0):
-		if(len(bat) == 1):
-			bat.append([bateria,time.time()])
-			print(bat,'Time:',(bat[1][1]-bat[0][1])/60)
-	"""
   	
 def resp1():
 	# What is the penult person found?
@@ -54,9 +43,9 @@ def resp3():
 	#What is the closest 'sala dos enfermeiros'?
 	path = main.shortest_path_enfermaria()
 	if(path == 'Not found any "Sala de enfermeiro"!'):
-		print('Not found any "Enfermaria"!')
+		print(path)
 	else:
-		print('Distance:',path[0][0],'\nTime:',path[0][1],'\nPath:',path[0][2])
+		print('Distance:',round(path[0][0],2),'\nTime:',round(path[0][1],2),'\nPath:',path[0][2])
 	
 def resp4():
 	# How much time is it to reach in the closest 'medico'?
@@ -68,6 +57,14 @@ def resp5():
 
 def resp6():
 	# How much time is to the baterie to be empty?
+	
+	#Para responder essa questão foi feito varios testes com a bateria,
+	#primeiro testamos quanto tempo a bateria dura com o agente parado 
+	#(3.086 min), segundo testamos quanto tempo a bateria dura com o 
+	#agente se movimentando (2.068 min), apos isso fazemos uma media 
+	#aritmetica dos dois valores dando um resultado estimado de que o 
+	#agente ficará metade do tempo se movimentando, e a outra metade 
+	#parado (media aritmética).
 	moving = (power[0]/100)*2.068
 	stopped = (power[0]/100)*3.086
 	average = (moving+stopped)/2
@@ -75,7 +72,8 @@ def resp6():
 
 def resp7():
 	answer = main.question7()
-	print('First:',answer[0],'%','\nSecond:',answer[1],'%')
+	print('Indenpendent:',round(answer[0],2),'%','\nCondicional Probability',round(answer[1],2),'%')
 
 def resp8():
-    pass
+	answer = main.question8()
+	print('Indenpendent:',round(answer[0],2),'%','\nCondicional Probability',round(answer[1],2),'%')
